@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/chimw/.gradle/caches/transforms-3/4825226d7bdc18dc642f18a8a048b277/transformed/core-1.7.0/res/drawable/notification_bg.xml" value="0.122" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.122" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/layout/activity_main.xml" value="0.13541666666666666" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/layout/content_main.xml" value="0.13541666666666666" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/layout/fragment_confirm_otp.xml" value="0.22" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/layout/fragment_first.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/layout/fragment_home.xml" value="0.37468671679197996" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/layout/fragment_second.xml" value="0.1" />
+        <entry key="..\:/Users/chimw/AndroidStudioProjects/YangaChecker/app/src/main/res/xml/config_service.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

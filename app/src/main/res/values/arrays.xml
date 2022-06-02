@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="discounts">
+        <item>Mk 300 – 90%</item>
+        <item>Mk 450 – 85%</item>
+        <item>Mk 600 – 80%</item>
+        <item>Mk 750 – 75%</item>
+    </string-array>
+
+    <string-array name="times">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+</resources>

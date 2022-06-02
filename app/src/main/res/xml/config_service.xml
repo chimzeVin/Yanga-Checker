@@ -1,0 +1,9 @@
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeViewClicked"
+    android:accessibilityFeedbackType="feedbackSpoken"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/desc"
+    android:notificationTimeout="100"
+    android:packageNames="com.android.phone, com.chimzeart.yangachecker"
+    android:settingsActivity="com.example.android.accessibility.ServiceSettingsActivity" />
