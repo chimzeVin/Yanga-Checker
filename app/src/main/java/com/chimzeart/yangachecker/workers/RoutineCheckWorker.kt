@@ -2,6 +2,7 @@ package com.chimzeart.yangachecker.workers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.content.Context
 import android.os.Build
@@ -50,7 +51,7 @@ class RoutineCheckWorker(
                 val bundle4Gb = result.data[0].bundleList[0]
 //                Toast.makeText(appContext, bundle4Gb.title, Toast.LENGTH_SHORT).show()
 
-                if (bundle4Gb.price <= 450)
+                if (bundle4Gb.price <= 750)
                     displayNotification(bundle4Gb.title)
 
                 val yangaBundle = YangaBundle(
@@ -119,7 +120,7 @@ class RoutineCheckWorker(
             NotificationCompat.Builder(appContext,"Yanga Notification")
                 .setContentTitle("4GB Yanga Bundle")
                 .setContentText(title)
-                .setPriority(IMPORTANCE_HIGH)
+                .setPriority(IMPORTANCE_DEFAULT)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
 
         } else {

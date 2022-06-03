@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -70,7 +69,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val viewModelFactory = HomeViewModelFactory(dataSource,token!! )
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
 
+        binding.lifecycleOwner = viewLifecycleOwner
         viewModel.checkBalanceAndUsage(token!!)
+
 
 
 //        binding.discountSpinner.onItemSelectedListener = this
@@ -79,7 +80,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.button80.setOnClickListener(this)
         binding.button75.setOnClickListener(this)
 
-        var phoneNumber = "0" + mainViewModel.msisdn.substring(3,12)
+        val phoneNumber = "0" + mainViewModel.msisdn.substringAfter("265")
         binding.numberText.text = phoneNumber
         isWorkRunning()
 
@@ -122,6 +123,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
             var remainingBundle: Double = totalBundle - usedBundle
 
+            if(totalBundle == 0.0)
+                binding.cardView.visibility = View.GONE
+            else
+                binding.cardView.visibility = View.VISIBLE
+
+
             //265887053883
             val megabyte = 1024 * 1024
 
@@ -140,10 +147,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         "Total: $totalBundle MB"
 
             val numOfBundles = it.bundleUsage.size
-            val elapsedTime = DateUtils.formatElapsedTime(it.bundleUsage[numOfBundles-1].secondsRemaining.toLong())
+            if (numOfBundles > 0) {
+                val elapsedTime =
+                    DateUtils.formatElapsedTime(it.bundleUsage[numOfBundles - 1].secondsRemaining.toLong())
+                binding.timeRemainingText.text = "$elapsedTime hrs remaining"
+            }
 
-
-            binding.timeRemainingText.text = "$elapsedTime hrs remaining"
             binding.remainingVolumeText.text = "${remainingBundle.toInt()}MB"
             binding.usedVolumeText.text = "${usedBundle.toInt()}MB"
             binding.totalVolumeText.text = "${totalBundle.toInt()}MB"
@@ -158,22 +167,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         }
 
-        viewModel.yangaBundles.observe(viewLifecycleOwner){
-            yangaBundles ->
+        binding.swiperefresh.setOnRefreshListener {
+            viewModel.refreshAllBalances(token!!)
+        }
 
-
-
-            val size = yangaBundles.size
-            if (size>0){
-                val currentBundle = yangaBundles[size-1]
-
-                Toast.makeText(
-                    context,
-                    "Buy: ${currentBundle.title} ${currentBundle.shouldAutoBuy}",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-
+        viewModel.onRefreshProgress.observe(viewLifecycleOwner){
+            if (it == 2){
+                binding.swiperefresh.isRefreshing = false
+                viewModel.resetRefreshProgress()
             }
         }
         return binding.root
@@ -220,6 +221,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     binding.statusText.text = "Yanga checker is not running"
                     binding.startCheckerButton.text = "Start Checker"
                     binding.autobuyMessageText.text = ""
+                    binding.autobuyMessageText.visibility = View.GONE
 
                 }
             }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "276946899208",
+    "project_id": "yanga-checker",
+    "storage_bucket": "yanga-checker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276946899208:android:803d9d6d5eee1b8d0e1cbd",
+        "android_client_info": {
+          "package_name": "com.chimzeart.yangachecker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276946899208-karv41k8gucil1rivc5cvorpm460erjo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSCY_Y1KiDWA7pTKmW7ssGFa6_02W65Bs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276946899208-karv41k8gucil1rivc5cvorpm460erjo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -47,6 +47,8 @@ private lateinit var sharedPref: SharedPreferences
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
         _binding = FragmentConfirmOtpBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+
         return binding.root
 
     }

@@ -4,13 +4,16 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.Selection
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -69,7 +72,10 @@ class VerifyNumberFragment : Fragment() {
 //            binding.phoneNumberButton.isEnabled = false
             binding.editTextPhone.setText(number)
         }
+        binding.lifecycleOwner = viewLifecycleOwner
 
+
+        binding.editTextPhone.addCountryCode()
         return binding.root
 
     }
@@ -148,5 +154,19 @@ class VerifyNumberFragment : Fragment() {
             ActivityCompat.requestPermissions(requireActivity(), permissions, 1)
         }
 
+    }
+}
+
+private fun EditText.addCountryCode() {
+
+    this.setText("265")
+    Selection.setSelection(this.text, this.text.length)
+
+    this.addTextChangedListener {
+        if(!it.toString().startsWith("265")){
+            this.setText("265")
+            Selection.setSelection(this.text, this.text.length)
+
+        }
     }
 }

@@ -17,7 +17,7 @@ data class BundleUsage (
     val thresholdValue: Double,
     val remainingValue: Double,
     val expiryDateTime: String,
-    val secondsRemaining: Int
+    val secondsRemaining: Int = 0
 
         )
 

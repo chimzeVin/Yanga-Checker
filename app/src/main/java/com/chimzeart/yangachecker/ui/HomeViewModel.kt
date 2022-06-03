@@ -24,12 +24,16 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
     private var _bundleDiscount =  MutableLiveData<Bundle>()
     val bundleDiscount: LiveData<Bundle> get() = _bundleDiscount
 
+    private var _onRefreshProgress: MutableLiveData<Int> = MutableLiveData(0)
+    val onRefreshProgress: LiveData<Int> get() = _onRefreshProgress
+
     private val repository = Repository(dataSource)
     val yangaBundles: LiveData<List<YangaBundle>> = repository.allBundles
     private var _balanceNusage =  MutableLiveData<UsageDataResponse>()
     val balanceNusage: LiveData<UsageDataResponse> get() = _balanceNusage
 
     init {
+
         checkYanga(token)
     }
 //        @SuppressLint("MissingPermission")
@@ -115,6 +119,9 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
 }
 
 
+    fun resetRefreshProgress(){
+        _onRefreshProgress.value = 0
+    }
 
     fun checkYanga(token: String) {
 
@@ -133,7 +140,7 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
                     Log.d("USSD", "Oops. Some error was encountered, try again in a bit")
 
                 }
-
+                _onRefreshProgress.value = _onRefreshProgress.value?.plus(1)
             }
             catch (e:Exception){
                 when (e){
@@ -216,6 +223,8 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
                     Log.d("USSD", "Oops. Some error was encountered, try again in a bit")
 
                 }
+                _onRefreshProgress.value = _onRefreshProgress.value?.plus(1)
+
 
             }
             catch (e:Exception){
@@ -253,6 +262,11 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
             }
         }
 
+    }
+
+    fun refreshAllBalances(token: String) {
+        checkYanga(token)
+        checkBalanceAndUsage(token)
     }
 }
 

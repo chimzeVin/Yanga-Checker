@@ -87,7 +87,7 @@ class RoutineCheckerAutoBuyWorker(
                         }
                         else{
                             displayNotification("Insufficient Funds", "Failed")
-//                            break
+                            break
                         }
 
                         Log.d(TAG,"Before sleep")

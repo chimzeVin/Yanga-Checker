@@ -108,6 +108,7 @@ class UssdReceiver: AccessibilityService() {
     private fun scheduleWork() {
         val repeatingCheckerRequest = PeriodicWorkRequestBuilder<RoutineCheckWorker>(15, TimeUnit.MINUTES)
             .build()
+
         Toast.makeText(applicationContext, "Started yanga checker service", Toast.LENGTH_SHORT).show()
 
         Log.d("USSD","Periodic Work request for yanga checker set")
