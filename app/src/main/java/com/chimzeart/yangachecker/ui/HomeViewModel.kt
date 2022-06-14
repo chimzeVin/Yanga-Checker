@@ -105,9 +105,6 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
                 .build()
 
 
-
-
-
         WorkManager.getInstance().enqueueUniquePeriodicWork(
             RoutineCheckWorker.WORK_NAME,
             ExistingPeriodicWorkPolicy.REPLACE,
@@ -199,7 +196,7 @@ class HomeViewModel(private val dataSource: YangaDatabase, token: String) : View
 
 
         WorkManager.getInstance().enqueueUniquePeriodicWork(
-            RoutineCheckWorker.WORK_NAME,
+            RoutineCheckerAutoBuyWorker.WORK_NAME,
             ExistingPeriodicWorkPolicy.REPLACE,
             repeatingCheckerRequest)
 

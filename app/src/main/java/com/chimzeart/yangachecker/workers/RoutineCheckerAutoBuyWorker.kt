@@ -29,9 +29,9 @@ class RoutineCheckerAutoBuyWorker(
     private val appContext: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
-//    companion object {
-//        const val WORK_NAME = "com.chimzeart.yangachecker.routinechecker"
-//    }
+    companion object {
+        const val WORK_NAME = "com.chimzeart.yangachecker.autoBuyer"
+    }
     override suspend fun doWork(): Result {
         Log.d(TAG,"Periodic work check with autobuy...")
 

@@ -1,15 +1,15 @@
 package com.chimzeart.yangachecker.ui
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,6 +18,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.chimzeart.yangachecker.MainViewModel
 import com.chimzeart.yangachecker.R
+import com.chimzeart.yangachecker.RoutineCheckerAutoBuyWorker
 import com.chimzeart.yangachecker.TAG
 import com.chimzeart.yangachecker.database.YangaDatabase
 import com.chimzeart.yangachecker.databinding.FragmentHomeBinding
@@ -42,16 +43,20 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
     private var token : String? = null
     private var number: String? = ""
+
     private var yangaDiscount = DISCOUNT_RATE.Yanga90
     private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var sharedPref: SharedPreferences
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sharedPref = requireActivity().getSharedPreferences(
+        sharedPref = requireActivity().getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         token = sharedPref.getString(getString(R.string.saved_token_key), null)
         number = sharedPref.getString(getString(R.string.saved_msisdn_key), "")
+        setHasOptionsMenu(true)
 //        findNavController().backst
 //        val kasd = find
 
@@ -162,9 +167,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
 
         binding.autobuyButton.setOnClickListener {
-            val buyFrequency = binding.frequencyEditText.text.toString()
-            viewModel.startYangaCheckerAutoBuy(token!!, yangaDiscount, buyFrequency)
 
+            val button = it as Button
+            if (button.text == "AutoBuy") {
+                val buyFrequency = binding.frequencyEditText.text.toString()
+                viewModel.startYangaCheckerAutoBuy(token!!, yangaDiscount, buyFrequency)
+            }
+            else if (button.text == "Stop AutoBuy")
+                WorkManager.getInstance(requireContext()).cancelUniqueWork(RoutineCheckerAutoBuyWorker.WORK_NAME)
         }
 
         binding.swiperefresh.setOnRefreshListener {
@@ -188,31 +198,31 @@ class HomeFragment : Fragment(), View.OnClickListener {
             if (it.size>0){
                 val state = it[0].state
 
-                val tags: MutableSet<String> = it[0].tags
-                var frequency = ""
-                var price = ""
-                for (tag in tags){
-                    if (tag.contains(FREQUENCY))
-                    {
-                        frequency = tag.substringAfter("-")
-                    }
-
-                    if (tag.contains(PRICE)){
-                        price = tag.substringAfter("-")
-                    }
-                }
-
-
-                if (frequency.isNotEmpty() && price.isNotEmpty()) {
-                    binding.autobuyMessageText.visibility = View.VISIBLE
-                    binding.autobuyMessageText.text =
-                        "AutoBuy is running. $frequency bundle(s) will be bought when the discount price is at K$price or lower"
-                }else {
-                    binding.autobuyMessageText.text = ""
-                    binding.autobuyMessageText.visibility = View.GONE
-                }
-
-                Log.d(TAG, "isWorkRunning: $tags")
+//                val tags: MutableSet<String> = it[0].tags
+//                var frequency = ""
+//                var price = ""
+//                for (tag in tags){
+//                    if (tag.contains(FREQUENCY))
+//                    {
+//                        frequency = tag.substringAfter("-")
+//                    }
+//
+//                    if (tag.contains(PRICE)){
+//                        price = tag.substringAfter("-")
+//                    }
+//                }
+//
+//
+//                if (frequency.isNotEmpty() && price.isNotEmpty()) {
+//                    binding.autobuyMessageText.visibility = View.VISIBLE
+//                    binding.autobuyMessageText.text =
+//                        "AutoBuy is running. $frequency bundle(s) will be bought when the discount price is at K$price or lower"
+//                }else {
+//                    binding.autobuyMessageText.text = ""
+//                    binding.autobuyMessageText.visibility = View.GONE
+//                }
+//
+//                Log.d(TAG, "isWorkRunning: $tags")
 
                 if (state == WorkInfo.State.ENQUEUED) {
                     binding.statusText.text = "The auto-checker is running every 15 minutes"
@@ -220,18 +230,54 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else if (state == WorkInfo.State.CANCELLED) {
                     binding.statusText.text = "Yanga checker is not running"
                     binding.startCheckerButton.text = "Start Checker"
-                    binding.autobuyMessageText.text = ""
-                    binding.autobuyMessageText.visibility = View.GONE
 
                 }
             }
+        }
+
+            val autoWorkInfos = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(
+                RoutineCheckerAutoBuyWorker.WORK_NAME)
+            autoWorkInfos.observe(viewLifecycleOwner){
+                if (it.size>0){
+                    val state = it[0].state
+                    val name = it[0].state.name
+                    Log.d(TAG, "Work Name: $name")
+
+                    val tags: MutableSet<String> = it[0].tags
+                    var frequency = ""
+                    var price = ""
+                    for (tag in tags){
+                        if (tag.contains(FREQUENCY))
+                        {
+                            frequency = tag.substringAfter("-")
+                        }
+
+                        if (tag.contains(PRICE)){
+                            price = tag.substringAfter("-")
+                        }
+                    }
+
+
+                    if (frequency.isNotEmpty() && price.isNotEmpty()) {
+                        binding.autobuyMessageText.visibility = View.VISIBLE
+                        binding.autobuyMessageText.text =
+                            "AutoBuy is running. $frequency bundle(s) will be bought when the discount price is at K$price or lower"
+                    }
+
+                    Log.d(TAG, "isWorkRunning: $tags")
+
+                    if (state == WorkInfo.State.ENQUEUED) {
+                        binding.autobuyButton.text = "Stop AutoBuy"
+                    } else if (state == WorkInfo.State.CANCELLED) {
+                        binding.autobuyButton.text = "AutoBuy"
+                        binding.autobuyMessageText.text = "AutoBuy is not running"
+                        binding.autobuyMessageText.visibility = View.VISIBLE
+                    }
+                }
 
         }
 
-//        val workInfosByTag = WorkManager.getInstance().getWorkInfosByTagLiveData(RoutineCheckWorker.WORK_NAME)
-//        workInfosByTag.observe(viewLifecycleOwner){
-//            it[0].tags
-//        }
+
 
     }
 
@@ -256,7 +302,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             //
             if (itemPrice <= price){
                 val highlightColor =
-                    ContextCompat.getColor(requireContext(), R.color.primaryDarkColor)
+                    ContextCompat.getColor(requireContext(), R.color.altTextColor)
                 item.strokeColor = ColorStateList.valueOf(highlightColor)
                 item.setTextColor(highlightColor)
                 item.typeface = Typeface.DEFAULT_BOLD
@@ -290,5 +336,42 @@ class HomeFragment : Fragment(), View.OnClickListener {
         viewModel.checkBalanceAndUsage(token!!)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_main, menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+
+
+
+            R.id.action_light_mode ->{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                requireActivity().getSharedPreferences(
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+                with(sharedPref.edit()){
+                   putInt(getString(R.string.dark_mode_key), AppCompatDelegate.MODE_NIGHT_NO )
+                    apply()
+                }
+                true
+            }
+            R.id.action_dark_mode ->{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                requireActivity().getSharedPreferences(
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+                with(sharedPref.edit()){
+                    putInt(getString(R.string.dark_mode_key), AppCompatDelegate.MODE_NIGHT_YES )
+                    apply()
+                }
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+
+        }
+    }
 
 }

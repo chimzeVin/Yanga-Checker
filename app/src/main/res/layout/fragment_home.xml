@@ -20,12 +20,12 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#F8F8F8"
+                android:background="@color/background"
                 tools:context=".ui.HomeFragment">
 
                 <TextView
                     android:id="@+id/balanceTextView"
-                    style="@style/secondaryTexts"
+                    android:textColor="@color/altTextColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -36,7 +36,6 @@
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@style/primaryTexts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -48,7 +47,7 @@
 
                 <TextView
                     android:id="@+id/textView3"
-                    style="@style/primaryTexts"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -61,7 +60,8 @@
 
                 <TextView
                     android:id="@+id/numberText"
-                    style="@style/secondaryTexts"
+                    android:textColor="@color/altTextColor"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -72,7 +72,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                             android:layout_marginStart="64dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="64dp"
-                            app:cpb_background_progressbar_color="#B5B5B5"
+                            app:cpb_background_progressbar_color="@color/progress_bar"
 
                             app:cpb_background_progressbar_width="34dp"
                             app:cpb_progress="66"
@@ -142,7 +142,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginBottom="8dp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/secondaryDarkColor"
+                            android:textColor="@color/secondary_alt_color"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/circularProgressBar"
@@ -167,7 +167,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="24dp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            android:textColor="@color/secondaryDarkColor"
+                            android:textColor="@color/secondary_alt_color"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView"
                             tools:text="8GB" />
@@ -217,17 +217,18 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textSize="12sp" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardView2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="8dp"
+
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/numberText">
@@ -256,6 +257,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginEnd="8dp"
                             android:elevation="6dp"
+
                             android:text="Start Checker"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
@@ -294,16 +296,16 @@
                             android:layout_marginTop="24dp"
                             android:layout_marginEnd="16dp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                            android:textColor="@color/primaryDarkColor"
+                            android:textColor="@color/altTextColor"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView9"
                             tools:text="4GB - 85%" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -374,12 +376,12 @@
                                 android:layout_weight="1"
                                 android:text="90%\nK300"
                                 android:textAlignment="center"
-                                android:textColor="@color/primaryDarkColor"
+                                android:textColor="@color/altTextColor"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 app:backgroundTint="@android:color/transparent"
                                 app:rippleColor="#33AAAAAA"
-                                app:strokeColor="@color/primaryDarkColor"
+                                app:strokeColor="@color/altTextColor"
                                 app:strokeWidth="2dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -455,7 +457,7 @@
 
                                 android:text="1"
 
-                                android:textColor="@color/primaryDarkColor"
+                                android:textColor="@color/altTextColor"
                                 android:textStyle="bold" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -503,7 +505,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

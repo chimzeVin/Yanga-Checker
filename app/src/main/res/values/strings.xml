@@ -14,6 +14,7 @@
     <string name="preference_file_key">com.chimzeart.yangachecker.app-config-key</string>
     <string name="saved_token_key">token_key</string>
     <string name="saved_msisdn_key">msisdn_key</string>
+    <string name="dark_mode_key">mode_key</string>
 
 
 </resources>

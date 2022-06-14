@@ -23,13 +23,13 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private var token : String? = null
     private var number: String? = ""
+    private var mode: Int = AppCompatDelegate.MODE_NIGHT_NO
     private lateinit var analytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        startService(Intent(this, UssdReceiver::class.java))
 //        isMyServiceRunning(UssdReceiver::class.java)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         analytics = Firebase.analytics
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
@@ -41,7 +41,15 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         token = sharedPref.getString(getString(R.string.saved_token_key), null)
         number = sharedPref.getString(getString(R.string.saved_msisdn_key), "")
+        mode = sharedPref.getInt(getString(R.string.dark_mode_key), 1)
 
+        if (mode == AppCompatDelegate.MODE_NIGHT_NO){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+        }
 
             number?.let { it1 -> mainViewModel.setMsisdn(it1) }
 //            findNavController().navigate(R.id.action_FirstFragment_to_homeFragment)
@@ -68,6 +76,8 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
 
 
 

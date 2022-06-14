@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="altTextColor">#dc4e90</color>
+    <color name="primary_variant_color">#dc4e90</color>
+    <color name="secondaryColor">#96d94a</color>
+    <color name="secondary_alt_color">#96d94a</color>
+    <color name="progress_bar">#454545</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#dc4e90</color>
+
+
+    <color name="background">#121212</color>
+
+
+
+</resources>

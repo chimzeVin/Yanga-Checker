@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
 
         <item name="boxCornerRadiusTopStart">12dp</item>
@@ -11,18 +11,11 @@
         <item name="boxBackgroundMode">outline</item>
         <item name="backgroundColor">@android:color/transparent</item>
         <item name="colorSurface">@android:color/transparent</item>
-        <item name="boxStrokeColor">@color/primaryDarkColor</item>
+
+
 
 
     </style>
 
-    <style name="primaryTexts">
 
-
-    </style>
-    <style name="secondaryTexts">
-        <item name="android:textColor">@color/primaryDarkColor</item>
-
-
-    </style>
 </resources>

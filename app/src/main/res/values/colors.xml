@@ -8,15 +8,20 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="background">#FFFFFFFF</color>
+
     <color name="primaryColor">#a71063</color>
     <color name="primaryLightColor">#dc4e90</color>
-    <color name="primaryDarkColor">#730039</color>
+    <color name="primary_variant_color">#730039</color>
     <color name="secondaryColor">#63a710</color>
     <color name="secondaryLightColor">#96d94a</color>
-    <color name="secondaryDarkColor">#2f7700</color>
+    <color name="secondary_alt_color">#2f7700</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="disabled">#818181</color>
+    <color name="progress_bar">#BCBCBC</color>
+
+    <color name="altTextColor">#730039</color>
 
     <color name="thirdColor">#10a798</color>
     <color name="thirdLightColor">#5bd9c9</color>
@@ -25,4 +30,6 @@
     <color name="fourthLightColor">#f8a07c</color>
     <color name="fourthDarkColor">#8e4425</color>
 
+
+    <color name="mtrl_textinput_default_box_stroke_color">#730039</color>
 </resources>
