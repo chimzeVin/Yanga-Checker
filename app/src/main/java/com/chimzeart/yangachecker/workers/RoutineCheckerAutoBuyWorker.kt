@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.chimzeart.yangachecker.database.YangaBundle
 import com.chimzeart.yangachecker.database.YangaDatabase
@@ -94,8 +95,11 @@ class RoutineCheckerAutoBuyWorker(
                         SystemClock.sleep(20000)
                         Log.d(TAG,"After sleep")
 
-                        if(i == buyFrequency.toInt())
+                        if(i == buyFrequency.toInt()) {
                             HomeViewModel.startYangaChecker(token)
+                            WorkManager.getInstance(appContext).cancelUniqueWork(WORK_NAME)
+                        }
+
 
                     }
 //                    WorkManager.getInstance().cancelUniqueWork(RoutineCheckWorker.WORK_NAME)
