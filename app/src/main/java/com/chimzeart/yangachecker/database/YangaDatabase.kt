@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [YangaBundle::class], version = 2, exportSchema = false)
+@Database(entities = [YangaBundle::class], version = 3, exportSchema = false)
 abstract class YangaDatabase: RoomDatabase() {
 
     abstract val yangaBundleDao: YangaBundleDao

@@ -12,9 +12,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.chimzeart.yangachecker.databinding.ActivityMainBinding
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,13 +21,13 @@ class MainActivity : AppCompatActivity() {
     private var token : String? = null
     private var number: String? = ""
     private var mode: Int = AppCompatDelegate.MODE_NIGHT_NO
-    private lateinit var analytics: FirebaseAnalytics
+//    private lateinit var analytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        startService(Intent(this, UssdReceiver::class.java))
 //        isMyServiceRunning(UssdReceiver::class.java)
-        analytics = Firebase.analytics
+//        analytics = Firebase.analytics
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
         setContentView(binding.root)

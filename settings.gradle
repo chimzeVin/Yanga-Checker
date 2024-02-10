@@ -13,11 +13,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
 
-//        maven {
-//            url = uri("http://maven.usehover.com/releases")
-//            allowInsecureProtocol = true
-//        }
-
     }
 }
 

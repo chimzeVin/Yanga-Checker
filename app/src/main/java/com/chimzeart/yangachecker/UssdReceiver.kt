@@ -13,7 +13,7 @@ import com.chimzeart.yangachecker.workers.RoutineCheckWorker
 import java.util.concurrent.TimeUnit
 
 
-const val TAG = "USSD"
+const val TAG = "MY_TAG"
 class UssdReceiver: AccessibilityService() {
 
     /**
@@ -31,47 +31,47 @@ class UssdReceiver: AccessibilityService() {
 //        String text = event.getText().toString();
             val text = it.text.toString()
 
-        if (it.className.equals("android.app.AlertDialog")){
-            val discount = text.substringAfter("1.").substringBefore("2").trim()
-
-            Log.d(TAG, discount )
-            val nodeInfo = it.source
-            when {
-                text.contains("REGISTERED") -> {
-                    selectOption(nodeInfo, "2")
-                }
-                text.contains("NEW") -> {
-                    selectOption(nodeInfo, "1")
-                }
-                text.contains("4GB") -> {
-                    Toast.makeText(applicationContext, discount, Toast.LENGTH_SHORT).show()
-                    val list: List<AccessibilityNodeInfo> =
-                        nodeInfo.findAccessibilityNodeInfosByText("Cancel")
-
-
-                    for (node in list) {
-                        node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                    }
-                }
-            }
-
-
-        }
-
-
-        if(it.className.equals("android.widget.Button")){
-            when{
-                text.contains("start",true)->{
-                    scheduleWork()
-                }
-                text.contains("stop",true)->{
-                    Toast.makeText(applicationContext, "Stopped yanga checker service", Toast.LENGTH_SHORT).show()
-                    WorkManager.getInstance().cancelUniqueWork(RoutineCheckWorker.WORK_NAME)
-
-                }
-            }
-
-        }
+//        if (it.className?.equals("android.app.AlertDialog")){
+//            val discount = text.substringAfter("1.").substringBefore("2").trim()
+//
+//            Log.d(TAG, discount )
+//            val nodeInfo = it.source
+//            when {
+//                text.contains("REGISTERED") -> {
+//                    selectOption(nodeInfo, "2")
+//                }
+//                text.contains("NEW") -> {
+//                    selectOption(nodeInfo, "1")
+//                }
+//                text.contains("4GB") -> {
+//                    Toast.makeText(applicationContext, discount, Toast.LENGTH_SHORT).show()
+//                    val list: List<AccessibilityNodeInfo> =
+//                        nodeInfo.findAccessibilityNodeInfosByText("Cancel")
+//
+//
+//                    for (node in list) {
+//                        node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+//                    }
+//                }
+//            }
+//
+//
+//        }
+//
+//
+//        if(it.className.equals("android.widget.Button")){
+//            when{
+//                text.contains("start",true)->{
+//                    scheduleWork()
+//                }
+//                text.contains("stop",true)->{
+//                    Toast.makeText(applicationContext, "Stopped yanga checker service", Toast.LENGTH_SHORT).show()
+//                    WorkManager.getInstance().cancelUniqueWork(RoutineCheckWorker.WORK_NAME)
+//
+//                }
+//            }
+//
+//        }
     }
 
     }

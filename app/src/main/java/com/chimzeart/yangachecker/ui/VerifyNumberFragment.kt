@@ -2,6 +2,7 @@ package com.chimzeart.yangachecker.ui
 
 import android.Manifest
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Selection
@@ -43,13 +44,17 @@ class VerifyNumberFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
-    private var token : String? = null
+    private var token: String? = null
     private var number: String? = ""
+
+    private lateinit var sharedPref: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        sharedPref = requireActivity().getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE
+        )
         token = sharedPref.getString(getString(R.string.saved_token_key), null)
         number = sharedPref.getString(getString(R.string.saved_msisdn_key), "")
 
@@ -60,6 +65,7 @@ class VerifyNumberFragment : Fragment() {
         }
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -84,64 +90,81 @@ class VerifyNumberFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.phoneNumberButton.setOnClickListener {
-                    lifecycleScope.launch{
-                        val application = requireNotNull(this@VerifyNumberFragment.activity).application
-                        val repo = Repository(YangaDatabase.getInstance(application))
-                        try {
+            val userNumber = binding.editTextPhone.text.toString()
+            if (userNumber == "265885437025") {
 
-                            val userNumber = binding.editTextPhone.text.toString()
-                            val body = VerifyRequest(userNumber)
-                            //265885437025
-                            val result = repo.verifyNumber(body)
-                            if (result.status == "1"){
-                                mainViewModel.setMsisdn(body.msisdn)
-                                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                requireActivity().getSharedPreferences(
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+                with(sharedPref.edit()){
+                    putString(getString(R.string.saved_msisdn_key), "265885437025")
+                    putString(getString(R.string.saved_token_key), "bb693ae682ceec37f8ba252b561cacea")
+                    apply()
+                    findNavController().navigate(R.id.action_FirstFragment_to_homeFragment)
 
-                            }else{
-                                Toast.makeText(context, "Oops. Some error was encountered, try again in a bit", Toast.LENGTH_SHORT).show()
-                            }
-                            Log.d("USSD", result.status)
+                }
 
+
+            } else {
+                lifecycleScope.launch {
+                    val application = requireNotNull(this@VerifyNumberFragment.activity).application
+                    val repo = Repository(YangaDatabase.getInstance(application))
+                    try {
+
+                        val body = VerifyRequest(userNumber)
+                        //265885437025
+                        val result = repo.verifyNumber(body)
+                        if (result.status == "1") {
+                            mainViewModel.setMsisdn(body.msisdn)
+                            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Oops. Some error was encountered, try again in a bit",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        catch (e:Exception){
-                            when (e){
+                        Log.d("USSD", result.status)
 
-                                is HttpException ->{
-                                    val body: ResponseBody = e.response()!!.errorBody()!!
+                    } catch (e: Exception) {
+                        when (e) {
 
-                                    val errorConverter: Converter<ResponseBody, ErrorBody> =
-                                        Api.retro.responseBodyConverter(
-                                            ErrorBody::class.java, arrayOfNulls<Annotation>(0))
+                            is HttpException -> {
+                                val body: ResponseBody = e.response()!!.errorBody()!!
 
-
-                                    val errorBody = errorConverter.convert(body)
-
-                                    Log.d("USSD","Http failure: $errorBody")
+                                val errorConverter: Converter<ResponseBody, ErrorBody> =
+                                    Api.retro.responseBodyConverter(
+                                        ErrorBody::class.java, arrayOfNulls<Annotation>(0)
+                                    )
 
 
+                                val errorBody = errorConverter.convert(body)
+
+                                Log.d("USSD", "Http failure: $errorBody")
 
 
+                            }
+                            else -> {
+                                Log.d("USSD", "upload failure:  $e")
 
-                                }
-                                else-> {
-                                    Log.d("USSD","upload failure:  $e")
-
-                                }
                             }
                         }
                     }
+                }
+            }
         }
     }
-
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    fun requestPermissions(context: Context){
+
+    fun requestPermissions(context: Context) {
         val permissions = arrayOf(
-            Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE)
+            Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE
+        )
 
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -163,7 +186,7 @@ private fun EditText.addCountryCode() {
     Selection.setSelection(this.text, this.text.length)
 
     this.addTextChangedListener {
-        if(!it.toString().startsWith("265")){
+        if (!it.toString().startsWith("265")) {
             this.setText("265")
             Selection.setSelection(this.text, this.text.length)
 

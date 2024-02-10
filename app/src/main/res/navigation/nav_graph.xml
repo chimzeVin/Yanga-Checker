@@ -37,6 +37,6 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.chimzeart.yangachecker.ui.HomeFragment"
-        android:label="Home"
+        android:label="Yanga Checker"
         tools:layout="@layout/fragment_home" />
 </navigation>

@@ -54,8 +54,6 @@
                     android:layout_marginEnd="16dp"
                     android:text="BALANCE"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/balanceTextView"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -90,7 +88,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="8dp">
+                        android:padding="16dp">
 
                         <com.mikhaellopez.circularprogressbar.CircularProgressBar
                             android:id="@+id/circularProgressBar"
@@ -236,7 +234,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="8dp">
+                        android:padding="16dp">
 
 
                         <TextView
@@ -324,7 +322,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
-                        android:padding="8dp">
+                        android:padding="16dp">
 
                         <TextView
                             android:id="@+id/textView4"
@@ -374,7 +372,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="4dp"
                                 android:layout_weight="1"
-                                android:text="90%\nK300"
+                                android:text="90%\nK432"
                                 android:textAlignment="center"
                                 android:textColor="@color/altTextColor"
                                 android:textSize="12sp"
@@ -391,7 +389,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="4dp"
                                 android:layout_weight="1"
-                                android:text="85%\nK450"
+                                android:text="85%\nK648"
                                 android:textColor="@color/disabled"
                                 android:textSize="12sp"
 
@@ -408,7 +406,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="4dp"
                                 android:layout_weight="1"
-                                android:text="80%\nK600"
+                                android:text="80%\nK864"
                                 android:textColor="@color/disabled"
                                 android:textSize="12sp"
 
@@ -425,7 +423,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="4dp"
                                 android:layout_weight="1"
-                                android:text="75%\nK750"
+                                android:text="75%\nK1080"
                                 android:textColor="@color/disabled"
                                 android:textSize="12sp"
                                 app:backgroundTint="@android:color/transparent"

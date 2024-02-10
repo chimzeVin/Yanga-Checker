@@ -14,7 +14,12 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.chimzeart.yangachecker.database.YangaBundle
 import com.chimzeart.yangachecker.database.YangaDatabase
-import com.chimzeart.yangachecker.network.*
+import com.chimzeart.yangachecker.network.Api
+import com.chimzeart.yangachecker.network.Bundle
+import com.chimzeart.yangachecker.network.BundlesResponse
+import com.chimzeart.yangachecker.network.BuyBundleRequest
+import com.chimzeart.yangachecker.network.ErrorBody
+import com.chimzeart.yangachecker.network.Repository
 import com.chimzeart.yangachecker.ui.FREQUENCY
 import com.chimzeart.yangachecker.ui.HomeViewModel
 import com.chimzeart.yangachecker.ui.PRICE
@@ -40,7 +45,7 @@ class RoutineCheckerAutoBuyWorker(
         val repo = Repository(database)
         val token = inputData.getString(TOKEN)!!
         val buyFrequency = inputData.getString(FREQUENCY)!!
-        val price: Int = inputData.getInt(PRICE, 300)
+        val price: Int = inputData.getInt(PRICE, 432)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val notificationChannel =  NotificationChannel("Yanga Notification", "Yanga Notification", IMPORTANCE_HIGH)
@@ -80,7 +85,7 @@ class RoutineCheckerAutoBuyWorker(
                     for (i in 1..buyFrequency.toInt()){
 
                         val buyResponse = repo.buyBundle(token,buyBundleRequest)
-                        Log.d("USSD", "Result from within worker ${buyResponse}")
+                        Log.d("USSD", "Result from within worker $buyResponse")
 
                         if (buyResponse.status == "1"){
                             displayNotification(bundle4Gb.title, "Successful")

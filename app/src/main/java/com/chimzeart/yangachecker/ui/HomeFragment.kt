@@ -7,7 +7,12 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -25,23 +30,23 @@ import com.chimzeart.yangachecker.databinding.FragmentHomeBinding
 import com.chimzeart.yangachecker.workers.RoutineCheckWorker
 import com.google.android.material.button.MaterialButton
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import kotlin.math.roundToInt
 
-enum class DISCOUNT_RATE(val price:Int){
-    Yanga90(300),
-    Yanga85(450),
-    Yanga80(600),
-    Yanga75(750)
+enum class DISCOUNT_RATE(val price: Int) {
+    Yanga90(432),
+    Yanga85(648),
+    Yanga80(864),
+    Yanga75(1080)
 }
-class HomeFragment : Fragment(), View.OnClickListener {
 
+class HomeFragment : Fragment(), View.OnClickListener {
 
 
     private lateinit var viewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var token : String? = null
+    private var token: String? = null
     private var number: String? = ""
 
     private var yangaDiscount = DISCOUNT_RATE.Yanga90
@@ -49,18 +54,21 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var sharedPref: SharedPreferences
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPref = requireActivity().getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE
+        )
         token = sharedPref.getString(getString(R.string.saved_token_key), null)
+        Log.i(TAG, "onCreate: token $token")
         number = sharedPref.getString(getString(R.string.saved_msisdn_key), "")
+        Log.i(TAG, "onCreate: token $number")
         setHasOptionsMenu(true)
 //        findNavController().backst
 //        val kasd = find
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,12 +79,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val application = requireNotNull(this.activity).application
         val dataSource = YangaDatabase.getInstance(application)
 
-        val viewModelFactory = HomeViewModelFactory(dataSource,token!! )
+        val viewModelFactory = HomeViewModelFactory(dataSource, token!!)
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
         viewModel.checkBalanceAndUsage(token!!)
-
 
 
 //        binding.discountSpinner.onItemSelectedListener = this
@@ -102,10 +109,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
 
 
-        viewModel.bundleDiscount.observe(viewLifecycleOwner){
-            val dateformat = SimpleDateFormat("HH:mm:ss")
+        viewModel.bundleDiscount.observe(viewLifecycleOwner) {
+            val dateFormat = SimpleDateFormat("HH:mm:ss")
 
-            val time = dateformat.format(Date())
+            val time = dateFormat.format(Date())
             val stringA = it.title.substringBefore("discount").trim()
             val size = stringA.substringBefore(",")
             val discount = stringA.substringAfter(",")
@@ -116,19 +123,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
 //            binding.bundleTextView.text = "${it.title} checked at $time"
         }
 
-        viewModel.balanceNusage.observe(viewLifecycleOwner){
+        viewModel.balanceNusage.observe(viewLifecycleOwner) {
             binding.balanceTextView.text = it.accountBalances.accountBalanceList[0].displayBalance
 
             var totalBundle = 0.0
             var usedBundle = 0.0
-            for (bundle in it.bundleUsage){
+            for (bundle in it.bundleUsage) {
                 totalBundle += bundle.thresholdValue
                 usedBundle += bundle.usedValue
 //                remainingBundle += bundle.remainingValue
             }
             var remainingBundle: Double = totalBundle - usedBundle
 
-            if(totalBundle == 0.0)
+            if (totalBundle == 0.0)
                 binding.cardView.visibility = View.GONE
             else
                 binding.cardView.visibility = View.VISIBLE
@@ -138,15 +145,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
             val megabyte = 1024 * 1024
 
             totalBundle /= megabyte
-            totalBundle= (totalBundle * 100.0).roundToInt() / 100.0
+            totalBundle = (totalBundle * 100.0).roundToInt() / 100.0
 
             usedBundle /= megabyte
             usedBundle = (usedBundle * 100.0).roundToInt() / 100.0
             remainingBundle /= megabyte
-            remainingBundle= (remainingBundle * 100.0).roundToInt() / 100.0
+            remainingBundle = (remainingBundle * 100.0).roundToInt() / 100.0
 
             val balances =
-                        "BUNDLE USAGE\n" +
+                "BUNDLE USAGE\n" +
                         "Remaining: $remainingBundle MB\n" +
                         "Used: $usedBundle MB\n" +
                         "Total: $totalBundle MB"
@@ -172,17 +179,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
             if (button.text == "AutoBuy") {
                 val buyFrequency = binding.frequencyEditText.text.toString()
                 viewModel.startYangaCheckerAutoBuy(token!!, yangaDiscount, buyFrequency)
-            }
-            else if (button.text == "Stop AutoBuy")
-                WorkManager.getInstance(requireContext()).cancelUniqueWork(RoutineCheckerAutoBuyWorker.WORK_NAME)
+            } else if (button.text == "Stop AutoBuy")
+                WorkManager.getInstance(requireContext())
+                    .cancelUniqueWork(RoutineCheckerAutoBuyWorker.WORK_NAME)
         }
 
         binding.swiperefresh.setOnRefreshListener {
             viewModel.refreshAllBalances(token!!)
         }
 
-        viewModel.onRefreshProgress.observe(viewLifecycleOwner){
-            if (it == 2){
+        viewModel.onRefreshProgress.observe(viewLifecycleOwner) {
+            if (it == 2) {
                 binding.swiperefresh.isRefreshing = false
                 viewModel.resetRefreshProgress()
             }
@@ -191,13 +198,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
 
-
     private fun isWorkRunning() {
-        val workInfos = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(RoutineCheckWorker.WORK_NAME)
-        workInfos.observe(viewLifecycleOwner){
-            if (it.size>0){
+        val workInfos = WorkManager.getInstance(requireContext())
+            .getWorkInfosForUniqueWorkLiveData(RoutineCheckWorker.WORK_NAME)
+        workInfos.observe(viewLifecycleOwner) {
+            if (it.size > 0) {
                 val state = it[0].state
 
+                Log.d(TAG, "State: $state")
 //                val tags: MutableSet<String> = it[0].tags
 //                var frequency = ""
 //                var price = ""
@@ -235,48 +243,47 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
 
-            val autoWorkInfos = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(
-                RoutineCheckerAutoBuyWorker.WORK_NAME)
-            autoWorkInfos.observe(viewLifecycleOwner){
-                if (it.size>0){
-                    val state = it[0].state
-                    val name = it[0].state.name
-                    Log.d(TAG, "Work Name: $name")
+        val autoWorkInfos = WorkManager.getInstance(requireContext()).getWorkInfosForUniqueWorkLiveData(
+            RoutineCheckerAutoBuyWorker.WORK_NAME
+        )
+        autoWorkInfos.observe(viewLifecycleOwner) {
+            if (it.size > 0) {
+                val state = it[0].state
+                val name = it[0].state.name
+                Log.d(TAG, "Work Name: $name")
 
-                    val tags: MutableSet<String> = it[0].tags
-                    var frequency = ""
-                    var price = ""
-                    for (tag in tags){
-                        if (tag.contains(FREQUENCY))
-                        {
-                            frequency = tag.substringAfter("-")
-                        }
-
-                        if (tag.contains(PRICE)){
-                            price = tag.substringAfter("-")
-                        }
+                val tags: Set<String> = it[0].tags
+                var frequency = ""
+                var price = ""
+                for (tag in tags) {
+                    if (tag.contains(FREQUENCY)) {
+                        frequency = tag.substringAfter("-")
                     }
 
-
-                    if (frequency.isNotEmpty() && price.isNotEmpty()) {
-                        binding.autobuyMessageText.visibility = View.VISIBLE
-                        binding.autobuyMessageText.text =
-                            "AutoBuy is running. $frequency bundle(s) will be bought when the discount price is at K$price or lower"
-                    }
-
-                    Log.d(TAG, "isWorkRunning: $tags")
-
-                    if (state == WorkInfo.State.ENQUEUED) {
-                        binding.autobuyButton.text = "Stop AutoBuy"
-                    } else if (state == WorkInfo.State.CANCELLED) {
-                        binding.autobuyButton.text = "AutoBuy"
-                        binding.autobuyMessageText.text = "AutoBuy is not running"
-                        binding.autobuyMessageText.visibility = View.VISIBLE
+                    if (tag.contains(PRICE)) {
+                        price = tag.substringAfter("-")
                     }
                 }
 
-        }
 
+                if (frequency.isNotEmpty() && price.isNotEmpty()) {
+                    binding.autobuyMessageText.visibility = View.VISIBLE
+                    binding.autobuyMessageText.text =
+                        "AutoBuy is running. $frequency bundle(s) will be bought when the discount price is at K$price or lower"
+                }
+
+                Log.d(TAG, "isWorkRunning: $tags")
+
+                if (state == WorkInfo.State.ENQUEUED) {
+                    binding.autobuyButton.text = "Stop AutoBuy"
+                } else if (state == WorkInfo.State.CANCELLED) {
+                    binding.autobuyButton.text = "AutoBuy"
+                    binding.autobuyMessageText.text = "AutoBuy is not running"
+                    binding.autobuyMessageText.visibility = View.VISIBLE
+                }
+            }
+
+        }
 
 
     }
@@ -292,21 +299,22 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val priceString = highlightedButton.text.toString().substringAfter("K")
         val price = priceString.toInt()
 
-        val discountButtons: List<MaterialButton> = listOf(binding.button90, binding.button85,binding.button80,binding.button75)
+        val discountButtons: List<MaterialButton> =
+            listOf(binding.button90, binding.button85, binding.button80, binding.button75)
 
-        for (item in discountButtons){
+        for (item in discountButtons) {
 
             val itemPriceString = item.text.toString().substringAfter("K")
             val itemPrice = itemPriceString.toInt()
 
             //
-            if (itemPrice <= price){
+            if (itemPrice <= price) {
                 val highlightColor =
                     ContextCompat.getColor(requireContext(), R.color.altTextColor)
                 item.strokeColor = ColorStateList.valueOf(highlightColor)
                 item.setTextColor(highlightColor)
                 item.typeface = Typeface.DEFAULT_BOLD
-            }else{
+            } else {
                 val disabledColor = ContextCompat.getColor(requireContext(), R.color.disabled)
                 item.strokeColor = ColorStateList.valueOf(disabledColor)
                 item.setTextColor(disabledColor)
@@ -314,18 +322,23 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
             }
 
-            when (highlightedButton.id){
-                R.id.button90 ->{yangaDiscount = DISCOUNT_RATE.Yanga90}
-                R.id.button85 ->{yangaDiscount = DISCOUNT_RATE.Yanga85}
-                R.id.button80 ->{yangaDiscount = DISCOUNT_RATE.Yanga80}
-                R.id.button75 ->{yangaDiscount = DISCOUNT_RATE.Yanga75}
+            when (highlightedButton.id) {
+                R.id.button90 -> {
+                    yangaDiscount = DISCOUNT_RATE.Yanga90
+                }
+                R.id.button85 -> {
+                    yangaDiscount = DISCOUNT_RATE.Yanga85
+                }
+                R.id.button80 -> {
+                    yangaDiscount = DISCOUNT_RATE.Yanga80
+                }
+                R.id.button75 -> {
+                    yangaDiscount = DISCOUNT_RATE.Yanga75
+                }
             }
 
 
-
         }
-
-
 
 
     }
@@ -343,27 +356,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
+        return when (item.itemId) {
 
 
-
-            R.id.action_light_mode ->{
+            R.id.action_light_mode -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
                 requireActivity().getSharedPreferences(
-                    getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-                with(sharedPref.edit()){
-                   putInt(getString(R.string.dark_mode_key), AppCompatDelegate.MODE_NIGHT_NO )
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE
+                )
+                with(sharedPref.edit()) {
+                    putInt(getString(R.string.dark_mode_key), AppCompatDelegate.MODE_NIGHT_NO)
                     apply()
                 }
                 true
             }
-            R.id.action_dark_mode ->{
+            R.id.action_dark_mode -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 requireActivity().getSharedPreferences(
-                    getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-                with(sharedPref.edit()){
-                    putInt(getString(R.string.dark_mode_key), AppCompatDelegate.MODE_NIGHT_YES )
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE
+                )
+                with(sharedPref.edit()) {
+                    putInt(getString(R.string.dark_mode_key), AppCompatDelegate.MODE_NIGHT_YES)
                     apply()
                 }
                 true
